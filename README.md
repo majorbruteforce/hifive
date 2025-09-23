@@ -1,3 +1,9 @@
+# Build blossom algorithm from source and bind
+- [x] Download [Vladimir Kolmogorov's Blossom V](https://pub.ista.ac.at/~vnk/software.html) and extract
+- [x] Create object files (Refer `Makefile.build` in root) and bundle into a single static library (pkg/blossom/libblossom.a)
+- [x] Create a wrapper and archive into a static library (pkg/blossom/libblossom_wrapper.a)
+- [x] Copy all header files from source into the package directory
+
 # User Interaction
 
 - [ ] **Socket Management**

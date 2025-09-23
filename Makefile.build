@@ -1,0 +1,58 @@
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -O3 -Wall -std=c++11
+
+# Directories
+SRCDIR = blossom5-v2.05.src
+OBJDIR = obj
+
+# Object files - main Blossom V algorithm
+OBJS = $(OBJDIR)/misc.o \
+       $(OBJDIR)/PMinit.o \
+       $(OBJDIR)/PMinterface.o \
+       $(OBJDIR)/PMmain.o \
+       $(OBJDIR)/PMduals.o \
+       $(OBJDIR)/PMexpand.o \
+       $(OBJDIR)/PMrepair.o \
+       $(OBJDIR)/PMshrink.o
+
+# GEOM module objects
+GEOM_OBJS = $(OBJDIR)/GPMinit.o \
+            $(OBJDIR)/GPMinterface.o \
+            $(OBJDIR)/GPMkdtree.o \
+            $(OBJDIR)/GPMmain.o
+
+# MinCost module objects  
+MINCOST_OBJS = $(OBJDIR)/MinCost.o
+
+# All objects
+ALL_OBJS = $(OBJS) $(GEOM_OBJS) $(MINCOST_OBJS)
+
+# Target library
+TARGET = libblossom.a
+
+# Create obj directory and build library
+$(TARGET): $(OBJDIR) $(ALL_OBJS)
+	ar rcs $@ $(ALL_OBJS)
+
+# Create obj directory
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+# Compile main source files
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Compile GEOM module files
+$(OBJDIR)/%.o: $(SRCDIR)/GEOM/%.cpp | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Compile MinCost module files
+$(OBJDIR)/MinCost.o: $(SRCDIR)/MinCost/MinCost.cpp | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Clean
+clean:
+	rm -rf $(OBJDIR) $(TARGET)
+
+.PHONY: clean
