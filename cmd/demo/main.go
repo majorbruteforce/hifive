@@ -3,21 +3,23 @@ package main
 import (
 	"fmt"
 
-	"github.com/majorbruteforce/hifive/pkg/blossom"
+	"github.com/majorbruteforce/hifive/pkg/textsim"
 )
 
 func main() {
-	h := blossom.New(4, 4)
-	defer h.Free()
+	docs := []string{
+		"I like stars.",
+		"Can we meet today?.",
+		"I went to the store today.",
+		"Stars are awesome!",
+	}
 
-	h.AddEdge(0, 1, 1.0)
-	h.AddEdge(1, 2, 1.0)
-	h.AddEdge(2, 3, 1.0)
-	h.AddEdge(3, 0, 1.0)
+	_, vecs, _ := textsim.BuildTFIDF(docs)
+	sim := textsim.PairwiseSimilarity(vecs)
 
-	h.Solve()
-
-	for i := 0; i < 4; i++ {
-		fmt.Printf("node %d matched with %d\n", i, h.GetMatch(i))
+	for i := 0; i < len(docs); i++ {
+		for j := i + 1; j < len(docs); j++ {
+			fmt.Printf("%d-%d: %.4f\n", i, j, sim[i][j])
+		}
 	}
 }
